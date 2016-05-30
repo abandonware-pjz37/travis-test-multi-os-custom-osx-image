@@ -1,0 +1,57 @@
+# OSX/Linux (https://github.com/travis-ci-tester/toolchain-table)
+
+language:
+  - cpp
+
+os:
+  - linux
+  - osx
+
+# Container-based infrastructure (Linux)
+# * https://docs.travis-ci.com/user/migrating-from-legacy/#How-can-I-use-container-based-infrastructure%3F
+sudo:
+  - false
+
+# Install packages differs for container-based infrastructure
+# * https://docs.travis-ci.com/user/migrating-from-legacy/#How-do-I-install-APT-sources-and-packages%3F
+# * http://stackoverflow.com/a/30925448/2288008
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - python3
+
+      # python3-pip package is not available, use 'easy_install3':
+      # * https://github.com/travis-ci/apt-package-whitelist/issues/768
+      - python3-setuptools # easy_install3
+
+      # https://github.com/travis-ci-tester/travis-test-clang-cxx-11
+      - libstdc++-4.8-dev
+
+      # https://github.com/travis-ci-tester/travis-test-gcc-cxx-11
+      - g++-4.8
+
+env:
+  global:
+    - MY_GLOBAL="hello global"
+
+matrix:
+  include:
+    - os: linux
+      env: MY_LOCAL="hello linux"
+    - os: osx
+      env: MY_LOCAL="hello osx"
+    - os: osx
+      osx_image: xcode7.3
+      env: MY_LOCAL="hello osx (custom)"
+
+script:
+  # Info about OS
+  - uname -a
+
+  - echo "${MY_GLOBAL}"
+  - echo "${MY_LOCAL}"
+
+  # Install Python 3
+  - if [[ "`uname`" == "Darwin" ]]; then xcodebuild -version; fi
