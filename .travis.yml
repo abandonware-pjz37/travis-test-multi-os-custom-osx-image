@@ -28,10 +28,6 @@ addons:
       # https://github.com/travis-ci-tester/travis-test-gcc-cxx-11
       - g++-4.8
 
-env:
-  global:
-    - MY_GLOBAL="hello global"
-
 matrix:
   include:
     - os: linux
@@ -46,7 +42,6 @@ script:
   # Info about OS
   - uname -a
 
-  - echo "${MY_GLOBAL}"
   - echo "${MY_LOCAL}"
 
   # Install Python 3
